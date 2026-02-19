@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     POOL_MIN_CONN: int = 1
     POOL_MAX_CONN: int = 10
+    SIZE_BATCH: int = 1000
 
     class Config:
         env_file = "db.env"

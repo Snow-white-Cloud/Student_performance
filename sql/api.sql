@@ -42,7 +42,6 @@ BEGIN
         WHERE g.grade = target_grade
         GROUP BY s.full_name
         HAVING COUNT(g.grade) < max_count
-        ORDER BY s.full_name, count_grades;
     );
 
     SELECT json_agg(json_build_object(
@@ -52,9 +51,9 @@ BEGIN
     FROM sub;
 
     IF info_students IS NULL THEN 
-        RETURN '[]'::JSON
+        RETURN '[]'::JSON;
     ELSE
-        RETURN info_students
+        RETURN info_students;
     END IF;
 
 -- EXCEPTION
