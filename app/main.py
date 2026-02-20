@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from app.config import settings
-from app.database import *
+from app.database import init_pool, close_connection_pool
+from app.routers.get import router as router_get
+from app.routers.upload import router as router_upload
+
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -19,3 +22,7 @@ async def shutdown():
 @app.get("/")
 async def root():
     return {"message": "Добро пожаловать! ЗАГЛУШКА!!! ДОПИШУ ПОЗЖЕ!!!"}
+
+app.include_router(router_get)
+
+app.include_router(router_upload)
