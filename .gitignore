@@ -1,5 +1,3 @@
 db.env
 docker-compose.yml
 requirement.txt
-schemas.py
-__init__.py

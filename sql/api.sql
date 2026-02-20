@@ -7,8 +7,8 @@ DECLARE
     info_students JSON;
 BEGIN
     SELECT COALESCE(json_agg(json_build_object(
-        'full_name', full_name,
-        'count_twos', count_grades) ORDER BY full_name) , '[]')
+        'full_name', s.full_name,
+        'count_twos', count_grades) ORDER BY s.full_name) , '[]'::JSON)
     INTO info_students
     FROM (
         SELECT s.full_name, COUNT(*) AS count_grades
@@ -17,12 +17,13 @@ BEGIN
         WHERE g.grade = target_grade
         GROUP BY s.full_name
         HAVING COUNT(*) > min_count
-    );
+    ) AS sub;
 
     RETURN info_students;
 
--- EXCEPTION
---    WHEN 
+EXCEPTION
+    WHEN others THEN
+        RETURN json_build_object('Error', SQLERRM);
 END;
 $$;
 
@@ -56,7 +57,8 @@ BEGIN
         RETURN info_students;
     END IF;
 
--- EXCEPTION
---    WHEN 
+EXCEPTION
+    WHEN others THEN
+        RETURN json_build_object('Error', SQLERRM);
 END;
 $$;

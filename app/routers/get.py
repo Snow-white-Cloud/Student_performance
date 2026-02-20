@@ -1,27 +1,81 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from app import schemas
 from app.database import get_connect
 import json
+import logging
 
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/students", tags=["students", "grades"])
 
+# Поиск студентов, у которых количество искомых отметок БОЛЬШЕ заданного
 @router.get("/more-than-3-twos", response_model=schemas.GetStudentsCountGrades)
-async def more_than_three_twos(params: schemas.GradeParams = Depends(schemas.get_grade_params)):
-    async with get_connect() as connect:
-        query = "SELECT grades_more_than($target_grade, $count)"
-        json_str = await connect.fetchval(query, params.dict(by_alias=True))
+async def more_than_three_twos(params: schemas.GradeParams = Depends(schemas.get_grade_params)): # Параментры: искомая отметка target_grade и их количество count
+    try:
+        async with get_connect() as connect:
+            # Получение студентов и количества их искомых отметок (со всеми условиями)
+            query = "SELECT grades_more_than($target_grade, $count)"
+            json_str = await connect.fetchval(query, params.dict(by_alias=True))
+            logger.info("Получен JSON после SQL функции")
+            
+            # Если студентов нет
+            if not(json_str) or json_str == '[]':
+                return schemas.GetStudentsCountGrades(__root__=[])
 
-        data = json.loads(json_str)
-        validated_data = schemas.GetStudentsCountGrades.parse_obj(data)
-        return validated_data
+            # Ошибка чтения
+            data = json.loads(json_str)
+            if isinstance(data, dict) and "Error" in data:
+                logger.error(f"Ошибка функции БД: {data["Error"]}", exc_info=True)
+                raise HTTPException(status_code=400, detail=f"Ошибка выполнения функции")
+            
+            # Валидация JSON и возврат
+            validated_data = schemas.GetStudentsCountGrades.parse_obj(data)
+            logger.info("JSON расшифрован и валидирован")
+            return validated_data
+    
+    except json.JSONDecodeError as error:
+        logger.exception(f"Ошибка парсинга JSON из БД: {error}")
+        raise HTTPException(status_code=500, detail="Ошибка обработки данных")
+
+    except HTTPException:
+        raise
+
+    except Exception as error:
+        logger.exception(f"Неожиданная ошибка при обработке /students/more-than-3-twos: {error}")
+        raise HTTPException(status_code=500, detail="Внутренняя ошибка сервера")
 
 
+# Поиск студентов, у которых количество искомых отметок МЕНЬШЕ заданного
 @router.get("/less-than-5-twos", response_model=schemas.GetStudentsCountGrades)
-async def less_than_five_twos(params: schemas.GradeParams = Depends(schemas.get_grade_params)):
-    async with get_connect() as connect:
-        query = "SELECT grades_less_than($target_grade, $count)"
-        json_str = await connect.fetchval(query, params.dict(by_alias=True))
+async def less_than_five_twos(params: schemas.GradeParams = Depends(schemas.get_grade_params)): # Параментры: искомая отметка target_grade и их количество count
+    try:
+        async with get_connect() as connect:
+            # Получение студентов и количества их искомых отметок (со всеми условиями)
+            query = "SELECT grades_less_than($target_grade, $count)"
+            json_str = await connect.fetchval(query, params.dict(by_alias=True))
+            logger.info("Получен JSON после SQL функции")
 
-        data = json.loads(json_str)
-        validated_data = schemas.GetStudentsCountGrades.parse_obj(data)
-        return validated_data
+            # Если студентов нет
+            if not(json_str) or json_str == '[]':
+                return schemas.GetStudentsCountGrades(__root__=[])
+
+            # Ошибка чтения
+            data = json.loads(json_str)
+            if isinstance(data, dict) and "Error" in data:
+                logger.error(f"Ошибка функции БД: {data["Error"]}", exc_info=True)
+                raise HTTPException(status_code=400, detail=f"Ошибка выполнения функции")
+
+            # Валидация JSON и возврат
+            validated_data = schemas.GetStudentsCountGrades.parse_obj(data)
+            logger.info("JSON расшифрован и валидирован")
+            return validated_data
+    
+    except json.JSONDecodeError as error:
+        logger.exception(f"Ошибка парсинга JSON из БД: {error}")
+        raise HTTPException(status_code=500, detail="Ошибка обработки данных")
+
+    except HTTPException:
+        raise
+
+    except Exception as error:
+        logger.exception(f"Неожиданная ошибка при обработке /students/less-than-5-twos: {error}")
+        raise HTTPException(status_code=500, detail="Внутренняя ошибка сервера")

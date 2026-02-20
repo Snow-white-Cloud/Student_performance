@@ -1,5 +1,8 @@
 from pydantic_settings import BaseSettings
+import logging
 
+
+# Общие настройки
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Аналитика успеваемости учеников"
@@ -19,8 +22,9 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     POOL_MIN_CONN: int = 1
     POOL_MAX_CONN: int = 10
-    SIZE_BATCH: int = 1000
-    SIZE_BATCH_NEW_STUD: int = 500
+    SIZE_BATCH: int = 1000          # Размер батча отметок, для которых в БД известны студенты
+    SIZE_BATCH_NEW_STUD: int = 500  # Размер батча для неизвестных в БД студентов и их отметок
+    LOG_LEVEL: str = logging.INFO
 
     class Config:
         env_file = "db.env"
