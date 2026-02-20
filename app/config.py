@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     POOL_MIN_CONN: int = 1
     POOL_MAX_CONN: int = 10
     SIZE_BATCH: int = 1000
+    SIZE_BATCH_NEW_STUD: int = 500
 
     class Config:
         env_file = "db.env"

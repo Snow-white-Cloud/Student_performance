@@ -7,8 +7,9 @@ DECLARE
     info_students JSON;
 BEGIN
     SELECT COALESCE(json_agg(json_build_object(
-        'full_name', s.full_name,
-        'count_twos', count_grades)), '[]') INTO info_students
+        'full_name', full_name,
+        'count_twos', count_grades) ORDER BY full_name) , '[]')
+    INTO info_students
     FROM (
         SELECT s.full_name, COUNT(*) AS count_grades
         FROM Grades g
@@ -16,8 +17,7 @@ BEGIN
         WHERE g.grade = target_grade
         GROUP BY s.full_name
         HAVING COUNT(*) > min_count
-    ) sub
-    ORDER BY full_name;
+    );
 
     RETURN info_students;
 
@@ -42,7 +42,7 @@ BEGIN
         WHERE g.grade = target_grade
         GROUP BY s.full_name
         HAVING COUNT(g.grade) < max_count
-    );
+    )
 
     SELECT json_agg(json_build_object(
         'full_name', full_name,

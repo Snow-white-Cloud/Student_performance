@@ -2,12 +2,14 @@
 CREATE TABLE IF NOT EXISTS Students (
     id SERIAL PRIMARY KEY,
     full_name VARCHAR(100) NOT NULL,
-    group CHAR(4) NOT NULL,
+    study_group CHAR(4) NOT NULL,
 );
 COMMENT ON TABLE Students IS 'Информация по студентам';
 COMMENT ON COLUMN Students.id IS 'Собственный уникальный ключ';
 COMMENT ON COLUMN Students.full_name IS 'Полное имя студента';
 COMMENT ON COLUMN Students.group IS 'Учебная группа студента';
+
+ALTER TABLE Students ADD CONSTRAINT unique_student UNIQUE (full_name, study_group);
 
 
 -- Таблица отметок студентов
