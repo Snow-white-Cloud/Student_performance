@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, RootModel, Field, validator
 from typing import List
 from datetime import date, datetime
 
@@ -14,8 +14,8 @@ class InfoStudentCountGrades(BaseModel):
     count_twos: int = Field(..., ge=0, description="Количество двоек")
 
 # Схема для списка (JSON) элементов
-class GetStudentsCountGrades(BaseModel):
-    __root__: List[InfoStudentCountGrades]
+class GetStudentsCountGrades(RootModel[List[InfoStudentCountGrades]]):
+    pass
 
 
 # Схема для строки из csv файла для батчевой загрузки

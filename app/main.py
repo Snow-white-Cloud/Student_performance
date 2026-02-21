@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from app.config import settings
-from app.database import init_pool, close_connection_pool
-from app.routers.get import router as router_get
-from app.routers.upload import router as router_upload
-from app.logger_config import setup_logging_settings
+from .config import settings
+from .database import init_pool, close_connection_pool, init_database
+from .routers.get import router as router_get
+from .routers.upload import router as router_upload
+from .logger_config import setup_logging_settings
 
 
 logger = setup_logging_settings()
@@ -19,7 +19,10 @@ app = FastAPI(
 async def startup():
     logger.info("Запуск сервера: инициализация пула подключений к БД")
     await init_pool()
-    logger.info("Пул успешно создан")
+    logger.info("Пул успешно создан. Запуск скриптов")
+    await init_database()
+    logger.info("Скрипты выполнены")
+
 
 # Действие при закрытии сервиса: закрытие пула подключений
 @app.on_event("shutdown")

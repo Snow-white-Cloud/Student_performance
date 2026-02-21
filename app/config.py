@@ -15,16 +15,18 @@ class Settings(BaseSettings):
         3. Предоставляет две аналитические ручки.
         4. Возвращает данные в формате JSON.
     """
-    DB_NAME: str
+    POSTGRES_DB: str
     DB_HOST: str
     DB_PORT: int
-    USER: str
-    DB_PASSWORD: str
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
     POOL_MIN_CONN: int = 1
     POOL_MAX_CONN: int = 10
     SIZE_BATCH: int = 1000          # Размер батча отметок, для которых в БД известны студенты
     SIZE_BATCH_NEW_STUD: int = 500  # Размер батча для неизвестных в БД студентов и их отметок
-    LOG_LEVEL: str = logging.INFO
+    LOG_LEVEL: int = logging.INFO
+    MAX_ATTEMPT: int = 10
+    TIMEOUT: int = 2
 
     class Config:
         env_file = "db.env"
