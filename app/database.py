@@ -5,7 +5,7 @@ import logging
 import aiofiles
 import time
 
-# Настройки подключения к БД
+# Настройки БД
 
 connection_pool = None
 logger = logging.getLogger(__name__)
@@ -52,6 +52,7 @@ async def close_connection_pool():
     if connection_pool:
         await connection_pool.close()
 
+# Облагораживание БД через SQL-скрипты
 async def init_database():
     try:
         async with get_connect() as connect:

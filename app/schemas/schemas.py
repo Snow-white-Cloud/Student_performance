@@ -5,7 +5,7 @@ from datetime import date, datetime
 
 # Схема для функций аналитики отметок
 class GradeParams(BaseModel):
-    target_grade: int = Field(2, gt=1, lt=6, description="Искомая отметка") # можно добавить алиасы
+    target_grade: int = Field(2, gt=1, lt=6, description="Искомая отметка")
     count: int = Field(3, gt=0, description="Количество искомых оценок")
 
 # Схема элемента ответа функции аналитики отметок

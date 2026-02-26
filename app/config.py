@@ -21,13 +21,13 @@ class Settings(BaseSettings):
     DB_PORT: int
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
-    POOL_MIN_CONN: int = 1
-    POOL_MAX_CONN: int = 10
+    POOL_MIN_CONN: int = 1          # Минимальное количество соединений с БД 
+    POOL_MAX_CONN: int = 10         # Максимальное количество соединений с БД
     SIZE_BATCH: int = 1000          # Размер батча отметок, для которых в БД известны студенты
     SIZE_BATCH_NEW_STUD: int = 500  # Размер батча для неизвестных в БД студентов и их отметок
     LOG_LEVEL: int = logging.INFO
-    MAX_ATTEMPT: int = 10
-    TIMEOUT: int = 2
+    MAX_ATTEMPT: int = 10           # Максимальное количество попыток создания пула 
+    TIMEOUT: int = 2                # Время ожидания между попытками
 
     model_config = ConfigDict(env_file=".env")
 

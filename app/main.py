@@ -11,7 +11,7 @@ logger = setup_logging_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Действие при запуске сервера: инициализация пула подключений
+    # Действие при запуске сервиса: инициализация пула подключений
     logger.info("Запуск сервера: инициализация пула подключений к БД")
     await init_pool()
     logger.info("Пул успешно создан. Запуск скриптов")
