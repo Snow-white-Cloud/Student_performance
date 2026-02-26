@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
 import logging
 
 
@@ -28,8 +29,7 @@ class Settings(BaseSettings):
     MAX_ATTEMPT: int = 10
     TIMEOUT: int = 2
 
-    class Config:
-        env_file = "db.env"
+    model_config = ConfigDict(env_file=".env")
 
 settings = Settings()
 

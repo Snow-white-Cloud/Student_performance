@@ -129,7 +129,6 @@ async def flush_batch_grades_unknow_stud(connect, batch_grades_unknow_stud: list
                 new_students
             )
             logger.debug("Неизвестные студенты вставлены")
-            logger.info("chek1")
 
         except Exception as error:
             logger.exception(f"Ошибка вставки неизвестных студентов или их отметок: {error}")
@@ -144,8 +143,7 @@ async def flush_batch_grades_unknow_stud(connect, batch_grades_unknow_stud: list
             key = (r["full_name"], r["study_group"])
             if key not in students_cache:
                 students_cache[(r[1], r[2])] = r[0]
-        logger.info(f"Обновлён кеш известных студентов: {len(students_cache)}")
-        logger.info("chek2")
+        logger.debug(f"Обновлён кеш известных студентов: {len(students_cache)}")
     
     except Exception as error:
         logger.exception(f"Ошибка вставки неизвестных студентов или их отметок: {error}")
@@ -161,7 +159,6 @@ async def flush_batch_grades_unknow_stud(connect, batch_grades_unknow_stud: list
                 [(batch[2], batch[3], students_cache[(batch[0], batch[1])]) for batch in batch_grades_unknow_stud]
             )
             logger.debug("Отметки вставлены")
-            logger.info("chek3")
             
             batch_grades_unknow_stud.clear()
 

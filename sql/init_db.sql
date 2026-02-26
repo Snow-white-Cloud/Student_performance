@@ -25,7 +25,7 @@ $$;
 CREATE TABLE IF NOT EXISTS Grades (
     id SERIAL PRIMARY KEY,
     grade SMALLINT CHECK (grade > 1 AND grade < 6),
-    date_of_mark DATE NOT NULL,
+    date_of_mark DATE NOT NULL CHECK (date_of_mark <= CURRENT_DATE),
     id_student INTEGER NOT NULL,
 
     FOREIGN KEY (id_student) REFERENCES Students(id) ON DELETE CASCADE

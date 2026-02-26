@@ -20,6 +20,17 @@ services:
       - db
     env_file:
       - db.env
+  
+  tests:
+    build: .
+    container_name: tests
+    command: ["pytest"]
+    env_file:
+      - db.env
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - .:/app 
 
 volumes:
   postgres_data:
